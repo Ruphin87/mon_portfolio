@@ -685,21 +685,27 @@ ul { list-style: none; }
   gap: 6px;
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 6px 13px;
-  border-radius: 999px;
+  padding: 0;
+  border-radius: 0;
   letter-spacing: 0.3px;
+  background: none;
+  border: none;
+  color: var(--firebase-orange);
 }
-.tag-security { background: rgba(253,213,19,0.16); color: var(--yellow); }
-.tag-ai { background: rgba(199,155,255,0.18); color: var(--violet-light); }
-.tag-iot { background: rgba(155,255,214,0.16); color: #6FFFC2; }
-.tag-mobile { background: rgba(255,184,140,0.16); color: #FFB88C; }
-.tag-web { background: rgba(255,155,214,0.16); color: #FF9BD6; }
+.tag-security { background: none; color: var(--firebase-orange); }
+.tag-ai { background: none; color: var(--firebase-orange); }
+.tag-iot { background: none; color: var(--firebase-orange); }
+.tag-mobile { background: none; color: var(--firebase-orange); }
+.tag-web { background: none; color: var(--firebase-orange); }
 
 .project-card h3 {
   font-family: var(--font-display);
   font-size: 1.12rem;
   margin-bottom: 10px;
   color: var(--white);
+  background: none;
+  padding: 0;
+  border-radius: 0;
 }
 .project-card p { color: var(--muted); font-size: 0.92rem; }
 
