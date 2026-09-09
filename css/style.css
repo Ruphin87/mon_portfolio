@@ -621,6 +621,18 @@ ul { list-style: none; }
 
 @media (max-width: 800px) {
   .about-grid { grid-template-columns: 1fr; }
+  .about-contact-list { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 520px) {
+  .about-contact-list {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .about-contact-item {
+    padding: 10px 12px;
+  }
 }
 
 /* ============================================
