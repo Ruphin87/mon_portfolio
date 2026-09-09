@@ -189,6 +189,46 @@ backToTop.addEventListener('click', () => {
 });
 
 // ============================================
+// PROJECT GITHUB LINKS
+// ============================================
+const projectCards = document.querySelectorAll('.project-card');
+projectCards.forEach((card) => {
+  const projectTop = card.querySelector('.project-top');
+  const githubUrl = card.getAttribute('data-github') || 'https://github.com/Ruphin87';
+  const demoUrl = card.getAttribute('data-demo');
+
+  const githubLink = document.createElement('a');
+  githubLink.className = 'project-card-link project-card-github';
+  githubLink.href = githubUrl;
+  githubLink.target = '_blank';
+  githubLink.rel = 'noopener';
+  githubLink.setAttribute('aria-label', 'Voir le projet sur GitHub');
+  githubLink.innerHTML = `<svg class="icon icon-github" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>`;
+
+  if (projectTop) {
+    projectTop.appendChild(githubLink);
+  } else {
+    card.appendChild(githubLink);
+  }
+
+  if (demoUrl) {
+    const demoLink = document.createElement('a');
+    demoLink.className = 'project-card-link project-card-demo';
+    demoLink.href = demoUrl;
+    demoLink.target = '_blank';
+    demoLink.rel = 'noopener';
+    demoLink.setAttribute('aria-label', 'Voir la démo du projet');
+    demoLink.innerHTML = `<svg class="icon icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v7H3V5h7"/></svg>`;
+
+    if (projectTop) {
+      projectTop.appendChild(demoLink);
+    } else {
+      card.appendChild(demoLink);
+    }
+  }
+});
+
+// ============================================
 // CONTACT FORM — SEND MESSAGE VIA EMAILJS
 // ============================================
 const contactForm = document.getElementById('contactForm');
