@@ -4,6 +4,25 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
 // ============================================
+// EMAILJS CONFIGURATION
+// ============================================
+const EMAILJS_PUBLIC_KEY = '6wrliTNT0megd55rl';
+const EMAILJS_SERVICE_ID = 'service_902q12c';
+const EMAILJS_TEMPLATE_ID = 'template_xry172i';
+
+const EMAILJS_CONFIG_READY =
+  EMAILJS_PUBLIC_KEY &&
+  EMAILJS_SERVICE_ID &&
+  EMAILJS_TEMPLATE_ID &&
+  EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY' &&
+  EMAILJS_SERVICE_ID !== 'YOUR_SERVICE_ID' &&
+  EMAILJS_TEMPLATE_ID !== 'YOUR_TEMPLATE_ID';
+
+if (window.emailjs && EMAILJS_CONFIG_READY) {
+  window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+}
+
+// ============================================
 // HEADER SCROLL STATE
 // ============================================
 const header = document.getElementById('siteHeader');
@@ -170,38 +189,114 @@ backToTop.addEventListener('click', () => {
 });
 
 // ============================================
-// CONTACT FORM — SEND MESSAGE
+// CONTACT FORM — SEND MESSAGE VIA EMAILJS
 // ============================================
 const contactForm = document.getElementById('contactForm');
 const formNote = document.getElementById('formNote');
+const submitButton = document.getElementById('contactSubmit');
+const submitText = submitButton?.querySelector('.submit-text');
 
-if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+if (contactForm && formNote && submitButton && submitText) {
+  let isSending = false;
+
+  contactForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    if (isSending) {
+      return;
+    }
 
     const name = document.getElementById('cfName').value.trim();
     const email = document.getElementById('cfEmail').value.trim();
     const subject = document.getElementById('cfSubject').value.trim();
     const message = document.getElementById('cfMessage').value.trim();
 
-    if (!name || !email || !subject || !message) {
-      formNote.textContent = "Merci de remplir tous les champs avant d'envoyer.";
+    if (!name) {
+      formNote.textContent = 'Veuillez saisir votre nom.';
       formNote.classList.add('error');
+      document.getElementById('cfName').focus();
+      return;
+    }
+
+    if (!email) {
+      formNote.textContent = 'Veuillez saisir votre adresse e-mail.';
+      formNote.classList.add('error');
+      document.getElementById('cfEmail').focus();
+      return;
+    }
+
+    const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailIsValid) {
+      formNote.textContent = 'Veuillez saisir une adresse e-mail valide.';
+      formNote.classList.add('error');
+      document.getElementById('cfEmail').focus();
+      return;
+    }
+
+    if (!subject) {
+      formNote.textContent = 'Veuillez saisir l’objet du message.';
+      formNote.classList.add('error');
+      document.getElementById('cfSubject').focus();
+      return;
+    }
+
+    if (!message) {
+      formNote.textContent = 'Veuillez saisir votre message.';
+      formNote.classList.add('error');
+      document.getElementById('cfMessage').focus();
       return;
     }
 
     formNote.classList.remove('error');
+    formNote.textContent = 'Envoi en cours...';
+    submitButton.disabled = true;
+    submitButton.classList.add('is-loading');
+    submitText.textContent = 'Envoi en cours...';
+    isSending = true;
 
-    const to = 'ruphinhenriratahinjanahary@gmail.com';
-    const mailSubject = encodeURIComponent(`[Portfolio] ${subject}`);
-    const mailBody = encodeURIComponent(
-      `Nom : ${name}\nE-mail : ${email}\n\nMessage :\n${message}`
-    );
+    const templateParams = {
+      name,
+      email,
+      subject,
+      message,
+      reply_to: email
+    };
 
-    window.location.href = `mailto:${to}?subject=${mailSubject}&body=${mailBody}`;
+    if (!window.emailjs || !EMAILJS_CONFIG_READY) {
+      console.warn('EmailJS is not configured yet. Replace the placeholder values in js/script.js.');
+      formNote.textContent = 'Le service d\'envoi n\'est pas encore configuré. Remplacez les identifiants EmailJS dans le code.';
+      formNote.classList.add('error');
+      submitButton.disabled = false;
+      submitButton.classList.remove('is-loading');
+      submitText.textContent = 'Envoyer';
+      isSending = false;
+      return;
+    }
 
-    formNote.textContent = "Votre application de messagerie va s'ouvrir pour envoyer le message. Merci !";
-    contactForm.reset();
+    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+      .then(() => {
+        formNote.textContent = 'Votre message a été envoyé avec succès. Merci de m\'avoir contacté !';
+        formNote.classList.remove('error');
+        submitText.textContent = 'Message envoyé ✓';
+        submitButton.disabled = true;
+        contactForm.reset();
+
+        setTimeout(() => {
+          submitButton.disabled = false;
+          submitButton.classList.remove('is-loading');
+          submitText.textContent = 'Envoyer';
+          isSending = false;
+        }, 1800);
+      })
+      .catch((error) => {
+        console.error('EmailJS send error:', error);
+        formNote.textContent = 'Une erreur est survenue lors de l\'envoi. Veuillez réessayer.';
+        formNote.classList.add('error');
+        submitButton.disabled = false;
+        submitButton.classList.remove('is-loading');
+        submitText.textContent = 'Envoyer';
+        isSending = false;
+      });
   });
 }
 

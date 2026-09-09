@@ -762,7 +762,7 @@ ul { list-style: none; }
    CONTACT
 ============================================ */
 .section-contact {
-  background: linear-gradient(180deg, var(--violet-darkest) 0%, var(--violet-dark) 100%);
+  background: linear-gradient(180deg, var(--violet-darkest) 0%, var(--firebase-black-soft) 100%);
   color: var(--white);
   position: relative;
   overflow: hidden;
